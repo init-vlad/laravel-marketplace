@@ -1,5 +1,5 @@
 # docker/common/Dockerfile
-FROM dunglas/frankenphp:1.1.1-php8.3 AS base
+FROM dunglas/frankenphp:php8.3 AS base
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip \
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN [ -f /usr/local/bin/frankenphp ] || ln -s /usr/bin/frankenphp /usr/local/bin/frankenphp
 WORKDIR /var/www
 
 # ---------- DEVELOPMENT ----------
@@ -17,7 +18,8 @@ FROM base AS development
 COPY . .
 RUN composer install
 EXPOSE 8000
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--watch"]
+# CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--watch"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
 # ---------- PRODUCTION ----------
 FROM base AS production
