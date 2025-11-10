@@ -1,0 +1,43 @@
+version: '3'
+
+tasks:
+  # Запуск docker compose
+  up:
+    desc: Запуск docker compose в фоне
+    cmds:
+      - docker compose -f compose.dev.yaml up -d
+
+  buildupd:
+    desc: Запуск docker compose в фоне
+    cmds:
+      - docker compose -f compose.dev.yaml up -d --build
+
+  buildup:
+    desc: Запуск docker compose в фоне
+    cmds:
+      - docker compose -f compose.dev.yaml up -d --build
+
+  # Остановка docker compose
+  down:
+    desc: Остановка и удаление контейнеров
+    cmds:
+      - docker compose -f compose.dev.yaml down
+
+  # Перезапуск docker compose
+  restart:
+    desc: Перезапуск docker compose
+    cmds:
+      - task: down
+      - task: up
+
+  rebuild:
+    desc: Перезапуск docker compose
+    cmds:
+      - task: down
+      - task: buildup
+
+  connect:
+    aliases: [c]
+    desc: Подключиться к контейнеру по ID или имени
+    cmds:
+      - docker exec -it {{.CLI_ARGS}} bash
