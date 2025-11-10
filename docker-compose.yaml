@@ -1,0 +1,58 @@
+services:
+  laravel:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: ${LARAVEL_ENV:-development}
+      args:
+        - LARAVEL_DB_DATABASE=${LARAVEL_DB_DATABASE}
+        - LARAVEL_DB_USERNAME=${LARAVEL_DB_USERNAME}
+        - LARAVEL_DB_PASSWORD=${LARAVEL_DB_PASSWORD}
+    env_file:
+      - ./.env.dev
+      - ./.env.dev.compose
+    environment:
+      - LARAVEL_DB_DATABASE=${LARAVEL_DB_DATABASE}
+      - LARAVEL_DB_USERNAME=${LARAVEL_DB_USERNAME}
+      - LARAVEL_DB_PASSWORD=${LARAVEL_DB_PASSWORD}
+    ports:
+      - "${LARAVEL_PORT:-8080}:${LARAVEL_PORT:-8080}"
+    volumes:
+      - .:/var/www
+    networks:
+      - laravel
+    depends_on:
+      - redis
+      - postgres
+
+  redis:
+    image: redis:8.2.3-alpine
+    container_name: laravel_redis
+    restart: unless-stopped
+    # ports:
+    #   - "6379:6379"
+    command: redis-server --appendonly yes
+    networks:
+      - laravel
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    image: postgres:16
+    # ports:
+    #   - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-app}
+      - POSTGRES_USER=${POSTGRES_USER:-laravel}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-secret}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - laravel
+
+networks:
+  laravel:
+
+volumes:
+  redis_data:
+  postgres_data:

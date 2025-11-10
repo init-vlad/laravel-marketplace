@@ -15,16 +15,13 @@ WORKDIR /var/www
 
 # ---------- DEVELOPMENT ----------
 FROM base AS development
-COPY . .
-RUN composer install
-EXPOSE 8000
-# CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--watch"]
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["sh", "-c", "php artisan octane:start --server=frankenphp --host=${HOST:-0.0.0.0} --port=${LARAVEL_PORT:-8080} --watch"]
 
 # ---------- PRODUCTION ----------
 FROM base AS production
 COPY . .
 RUN composer install --no-dev --optimize-autoloader
+RUN php artisan migrate
+RUN php artisan db:seed
 RUN php artisan optimize
-EXPOSE 8000
-CMD ["frankenphp", "run", "--workers=8", "--max-requests=1000", "--static=/var/www/public", "--host=0.0.0.0", "--port=8000"]
+CMD ["sh", "-c", "frankenphp run --workers=${LARAVEL_OCTANE_WORKERS:-8} --max-requests=${LARAVEL_OCTANE_MAX_REQUESTS:-1000} --static=/var/www/public --host=${HOST:-0.0.0.0} --port=${LARAVEL_PORT:-8080}"]
