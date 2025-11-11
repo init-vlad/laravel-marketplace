@@ -1,0 +1,32 @@
+name: Hello World
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  say_hello:
+    runs-on: self-hosted
+    steps:
+      - name: Показать, кто мы и где
+        run: |
+          echo "Hello from $HOSTNAME"
+          uname -a
+
+      - name: Чекаут кода
+        uses: actions/checkout@v4
+
+      - name: Список файлов репозитория
+        run: ls -la
+
+      - name: Используем переменные/секреты
+        env:
+          EXAMPLE_VAR: "42"
+          GH_ACTOR: ${{ github.actor }}
+        run: |
+          echo "actor=${GH_ACTOR}, var=${EXAMPLE_VAR}"
+          # пример чтения секрета (добавь в Settings > Secrets and variables > Actions)
+          if [ -n "${{ secrets.MY_SECRET || '' }}" ]; then
+            echo "Секрет получен (не печатаем его!)"
+          fi

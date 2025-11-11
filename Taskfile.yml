@@ -5,12 +5,12 @@ tasks:
   up:
     desc: Запуск docker compose в фоне
     cmds:
-      - docker compose --env-file .env.dev.compose up -d
+      - docker compose --env-file .env/.env.dev.compose up -d
 
   buildup:
     desc: Запуск docker compose в фоне
     cmds:
-      - docker compose --env-file .env.dev.compose up -d --build
+      - docker compose --env-file .env/.env.dev.compose up -d --build
 
   # Остановка docker compose
   down:
