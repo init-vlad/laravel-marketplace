@@ -4,9 +4,11 @@ FROM dunglas/frankenphp:php8.3 AS base
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip \
     libpq-dev libzip-dev libicu-dev \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
     && docker-php-ext-install pdo_pgsql intl bcmath pcntl zip \
+    && pecl install redis \
+    && pecl install opentelemetry \
+    && docker-php-ext-enable redis \
+    && echo "extension=opentelemetry.so" > /usr/local/etc/php/conf.d/opentelemetry.ini \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
