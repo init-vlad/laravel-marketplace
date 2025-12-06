@@ -23,10 +23,12 @@ COPY . .
 #  && chown -R www-data:www-data storage bootstrap/cache \
 #  && chmod -R ug+rwx storage bootstrap/cache
 
-# CMD ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=${LARAVEL_PORT:-8080}"]
+# CMD ["sh", "php artisan octane:start --server=frankenphp --host=${OCTANE_HOST:-0.0.0.0} --port=${OCTANE_PORT:-8080}"]
 
 # ---------- DEVELOPMENT ----------
 FROM base AS development
+RUN apt-get install -y --no-install-recommends
 RUN composer install --quiet
-CMD ["sh", "-c", "php artisan octane:start --server=frankenphp --host=${OCTANE_HOST:-0.0.0.0} --port=${OCTANE_PORT:-8080} --watch"]
+ENTRYPOINT [""]
+CMD ["sleep", "infinity"]
 

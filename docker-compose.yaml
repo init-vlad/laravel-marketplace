@@ -18,7 +18,6 @@ services:
 
   redis:
     image: redis:8.2.3-alpine
-    container_name: laravel_redis
     restart: unless-stopped
     # ports:
     #   - "6379:6379"

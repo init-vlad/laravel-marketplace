@@ -16,9 +16,9 @@ storage/*
 !storage/framework/views
 
 .env
-.env/*
 docker-compose*.yml
 docker
+Dockerfile
 *.md
 .idea
 .vscode
