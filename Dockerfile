@@ -13,15 +13,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN [ -f /usr/local/bin/frankenphp ] || ln -s /usr/bin/frankenphp /usr/local/bin/frankenphp
 WORKDIR /var/www
 
-# ---------- DEVELOPMENT ----------
-FROM base AS development
-CMD ["sh", "-c", "php artisan octane:start --server=frankenphp --host=${HOST:-0.0.0.0} --port=${LARAVEL_PORT:-8080} --watch"]
+COPY . .
 
 # ---------- PRODUCTION ----------
-FROM base AS production
-COPY . .
-RUN composer install --no-dev --optimize-autoloader
-RUN php artisan migrate
-RUN php artisan db:seed
-RUN php artisan optimize
-CMD ["sh", "-c", "frankenphp run --workers=${LARAVEL_OCTANE_WORKERS:-8} --max-requests=${LARAVEL_OCTANE_MAX_REQUESTS:-1000} --static=/var/www/public --host=${HOST:-0.0.0.0} --port=${LARAVEL_PORT:-8080}"]
+# FROM base AS production
+# RUN composer install --no-dev --optimize-autoloader --no-interaction --no-ansi --no-progress --quiet
+
+# RUN mkdir -p storage/logs bootstrap/cache \
+#  && chown -R www-data:www-data storage bootstrap/cache \
+#  && chmod -R ug+rwx storage bootstrap/cache
+
+# CMD ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=${LARAVEL_PORT:-8080}"]
+
+# ---------- DEVELOPMENT ----------
+FROM base AS development
+RUN composer install --quiet
+CMD ["sh", "-c", "php artisan octane:start --server=frankenphp --host=${OCTANE_HOST:-0.0.0.0} --port=${OCTANE_PORT:-8080} --watch"]
+

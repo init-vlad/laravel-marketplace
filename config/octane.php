@@ -36,6 +36,9 @@ return [
     */
 
     'server' => env('OCTANE_SERVER', 'roadrunner'),
+    'frankenphp' => [
+        'state_file' => storage_path('logs/octane-server-state.json'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
