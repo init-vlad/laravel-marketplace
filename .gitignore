@@ -25,3 +25,5 @@ frankenphp
 frankenphp-worker.php
 
 .env
+grafana
+test.json
