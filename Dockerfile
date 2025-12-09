@@ -1,14 +1,16 @@
 # docker/common/Dockerfile
 FROM dunglas/frankenphp:php8.3 AS base
 
+ENV MAKEFLAGS="-j10"
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git unzip \
     libpq-dev libzip-dev libicu-dev \
     && docker-php-ext-install pdo_pgsql intl bcmath pcntl zip \
     && pecl install redis \
-    && pecl install opentelemetry \
+    && pecl install grpc \
+    # && pecl install opentelemetry \
+    # && echo "extension=opentelemetry.so" > /usr/local/etc/php/conf.d/opentelemetry.ini \
     && docker-php-ext-enable redis \
-    && echo "extension=opentelemetry.so" > /usr/local/etc/php/conf.d/opentelemetry.ini \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
