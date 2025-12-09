@@ -15,6 +15,7 @@
         "laravel/framework": "^12.0",
         "laravel/horizon": "*",
         "laravel/octane": "^2.13",
+        "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.15",
         "laravel/tinker": "^2.10.1",
         "open-telemetry/api": "^1.7",

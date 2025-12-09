@@ -33,6 +33,5 @@ COPY . .
 FROM base AS development
 RUN apt-get install -y --no-install-recommends
 RUN composer install --quiet
-ENTRYPOINT [""]
 CMD ["sleep", "infinity"]
 

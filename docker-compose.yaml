@@ -1,5 +1,6 @@
 services:
   laravel:
+    user: "${UID}:${GID}"
     build:
       context: .
       dockerfile: ./Dockerfile
